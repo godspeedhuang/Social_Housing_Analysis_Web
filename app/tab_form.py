@@ -1,3 +1,5 @@
+import matplotlib 
+matplotlib.use('Agg') 
 from matplotlib.axis import XAxis
 import numpy as np
 import pandas as pd
