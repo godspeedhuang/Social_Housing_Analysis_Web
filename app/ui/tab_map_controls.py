@@ -34,8 +34,8 @@ def make_tab_port_map_controls(
                             min=0,
                             step=1,
                             debounce=True,
-                            
-                        ),'公尺'
+                            className='px-2'
+                        ),' 公尺'
                     ],width=12,className='px-3 text-light')
                     
                 )

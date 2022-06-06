@@ -11,13 +11,12 @@ from app.ui import (
 )
 from app import tab_map,tab_form,tab_left_panel,tab_setting
 from config import strings, constants
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output,State
 import pyproj
 from sqlalchemy import create_engine
 import geopandas as gpd
 import plotly.express as px
 import numpy as np
-
 
 # EXTERNAL SCRIPTS AND STYLES
 external_scripts = ["https://kit.fontawesome.com/0bb0d79500.js"]
@@ -171,11 +170,11 @@ def render_tab(tab):
                 className="tab-port-compare-container",
                 children=[
                     tab_setting.tab_higher_adhesion(
-                        score_weighted=[0.5,0.25,0.25]
+                        score_weighted=[0.25,0.25,0.5]
                     ),
-                    # tab_setting.tab_lower_adhesion(
-                    #     score_wighted=[0.5,0.5]
-                    # )
+                    tab_setting.tab_lower_adhesion(
+                        score_weighted=[0.5,0.5]
+                    )
                 ],
             )
         ]
@@ -365,17 +364,22 @@ def update_port_stats_tab(public,social_housing)->html.Div:
 
 
 
-# COMPARE RENDERER (TAB 3)
+# COMPARE RENDERER (TAB 3-高)
 @app.callback(
     Output("tab-port-compare-container", "children"),
     [
         Input("social-housing-select-dpd",'value'),
-        Input('surrounding-opendata-weighted','value'),
-        Input('surrounding-people-weighted','value'),
-        Input('social-housing-people-weighted','value')
+        Input("submit-higher-button",'n_clicks'),
+        State('surrounding-opendata-weighted','value'),
+        State('surrounding-people-weighted','value'),
+        State('social-housing-people-weighted','value'),
+        Input("submit-lower-button",'n_clicks'),
+        State('lower-surrounding-people-weighted','value'),
+        State('lower-social-housing-people-weighted','value'),
     ],
 )
-def public_setting(social_housing,h_surr_open,h_surr_peo,h_soci_peo):
+def public_setting(social_housing,h_clicks,h_surr_open,h_surr_peo,h_soci_peo,
+                                l_clicks,l_surr_peo,l_soci_peo):
     """
     Renders content for the public setting.
 
@@ -385,15 +389,14 @@ def public_setting(social_housing,h_surr_open,h_surr_peo,h_soci_peo):
     :return: HTML div
     """
     
-    # FORM DATA
-    print(social_housing)
-
     data_1=tab_form.get_tidy_data(SPREADSHEET_ID=SPREADSHEET_ID_1)
     data_2=tab_form.get_tidy_data(SPREADSHEET_ID=SPREADSHEET_ID_2)
     data_1=data_1[data_1['請問您即將要入住的社會住宅為？']==social_housing]
     data_2=data_2[data_2['請問您即將要入住的社會住宅為？']==social_housing]
     # print(data_1)
     # print(data_2)
+    
+    
     h_data_surr=np.array(tab_form.get_data_mean(higher_adhesion,data_1))
     h_data_soci=np.array(tab_form.get_data_mean(higher_adhesion,data_2))
     
@@ -408,8 +411,15 @@ def public_setting(social_housing,h_surr_open,h_surr_peo,h_soci_peo):
     h_calculate=h_surr_open_data*float(h_surr_open)+h_data_surr*float(h_surr_peo)+h_data_soci*float(h_soci_peo)
     h_data=pd.DataFrame(h_calculate,index=higher_adhesion,columns=['公共設施需求強度'])
     h_data=h_data.sort_values(by=['公共設施需求強度'])
-    fig=px.bar(h_data,orientation='h')
+    fig_1=px.bar(h_data,orientation='h')
 
+    l_data_surr=np.array(tab_form.get_data_mean(lower_adhesion,data_1))
+    l_data_soci=np.array(tab_form.get_data_mean(lower_adhesion,data_2))
+    l_calculate=l_data_surr*float(l_surr_peo)+l_data_soci*float(l_soci_peo)
+    l_data=pd.DataFrame(l_calculate,index=lower_adhesion,columns=['公共設施需求強度'])
+    l_data=l_data.sort_values(by=['公共設施需求強度'])
+    fig_2=px.bar(l_data,orientation='h')        
+            
 
     return html.Div(
         children=[
@@ -427,7 +437,21 @@ def public_setting(social_housing,h_surr_open,h_surr_peo,h_soci_peo):
                                 html.Img(src=app.get_asset_url('higher_.png'),width='100%'),
                             ],width=6,className='p-2'),
                             dbc.Col([
-                                dcc.Graph(figure=fig),
+                                dcc.Graph(figure=fig_1),
+                            ],width=6,className='p-2')
+                        ]),
+                        dbc.Row([
+                            dbc.Col([
+                                html.H3(children=['低附著力公共設施需求計算'],className='text-center'),
+                                tab_setting.tab_lower_adhesion([l_surr_peo,l_soci_peo])
+                            ],className='p-3')
+                        ]),
+                        dbc.Row([
+                            dbc.Col([
+                                html.Img(src=app.get_asset_url('lower_.png'),width='100%'),
+                            ],width=6,className='p-2'),
+                            dbc.Col([
+                                dcc.Graph(figure=fig_2),
                             ],width=6,className='p-2')
                         ])
                         # dbc.Row([
@@ -443,6 +467,82 @@ def public_setting(social_housing,h_surr_open,h_surr_peo,h_soci_peo):
             dbc.Row([]),
         ]
     )
+
+
+# COMPARE RENDERER (TAB 3-低)
+# @app.callback(
+#     Output("tab-port-compare-container", "children"),
+#     [
+#         Input("social-housing-select-dpd",'value'),
+        
+#     ],
+# )
+# def public_setting(social_housing,l_clicks,l_surr_peo,l_soci_peo):
+    # """
+    # Renders content for the public setting.
+
+    # :param port1: str, a port to compare
+    # :param port2:  str, a port to compare
+    # :param vessel_type: str, vessel type of interest
+    # :return: HTML div
+    # """
+
+    # data_1=tab_form.get_tidy_data(SPREADSHEET_ID=SPREADSHEET_ID_1)
+    # data_2=tab_form.get_tidy_data(SPREADSHEET_ID=SPREADSHEET_ID_2)
+    # data_1=data_1[data_1['請問您即將要入住的社會住宅為？']==social_housing]
+    # data_2=data_2[data_2['請問您即將要入住的社會住宅為？']==social_housing]
+    # # print(data_1)
+    # # print(data_2)
+    # h_data_surr=np.array(tab_form.get_data_mean(higher_adhesion,data_1))
+    # h_data_soci=np.array(tab_form.get_data_mean(higher_adhesion,data_2))
+    
+    # h_surr_open_data=helpers.get_public_strength(
+    #     public_list=higher_adhesion,
+    #     popu_filter=popu_filter,
+    #     public_geotable_name=public_geotable_name,
+    #     engine=engine,
+    #     villcode_list=villcode_list,
+    # )
+    # h_surr_open_data=np.array(h_surr_open_data.iloc[0].values)
+    # h_calculate=h_surr_open_data*float(h_surr_open)+h_data_surr*float(h_surr_peo)+h_data_soci*float(h_soci_peo)
+    # h_data=pd.DataFrame(h_calculate,index=higher_adhesion,columns=['公共設施需求強度'])
+    # h_data=h_data.sort_values(by=['公共設施需求強度'])
+    # fig=px.bar(h_data,orientation='h')
+    # print(h_surr_open,h_surr_peo,h_soci_peo)
+
+    # return html.Div(
+    #     children=[
+    #         html.Div(
+    #             dbc.Row([
+    #                 dbc.Col([
+    #                     dbc.Row([
+    #                         dbc.Col([
+    #                             html.H3(children=['高附著力公共設施需求計算'],className='text-center'),
+    #                             tab_setting.tab_higher_adhesion([h_surr_open,h_surr_peo,h_soci_peo])
+    #                         ],className='p-3')
+    #                     ]),
+    #                     dbc.Row([
+    #                         dbc.Col([
+    #                             html.Img(src=app.get_asset_url('higher_.png'),width='100%'),
+    #                         ],width=6,className='p-2'),
+    #                         dbc.Col([
+    #                             dcc.Graph(figure=fig),
+    #                         ],width=6,className='p-2')
+    #                     ])
+                        # dbc.Row([
+                        #     dbc.Col([
+
+                        #     ],width=4),
+                        #     dbc.Col(['test'],width=8)
+                        # ])
+    #                 ],className='text-light')
+    #             ],className='border border-secondary rounded m-2 mt-2'),
+    #         ),
+            
+    #         dbc.Row([]),
+    #     ]
+    # )
+
 
 
 # # COMPARE TAB DROPDOWNS
