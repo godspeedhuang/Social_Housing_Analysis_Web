@@ -1,3 +1,5 @@
+import matplotlib 
+matplotlib.use('Agg') 
 from dash import Dash,dcc,html
 import pandas as pd
 import dash_bootstrap_components as dbc
