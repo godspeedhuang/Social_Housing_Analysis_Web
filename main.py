@@ -595,6 +595,6 @@ def public_setting(social_housing,h_clicks,h_surr_open,h_surr_peo,h_soci_peo,
 # return app
 
 if __name__ == "__main__":
-    # app.run_server(host='0.0.0.0', port=9000) # production
-    app.run_server(debug=True)  # development
+    app.run_server(host='0.0.0.0', port=9000) # production
+    # app.run_server(debug=True)  # development
     # app.run_server()
