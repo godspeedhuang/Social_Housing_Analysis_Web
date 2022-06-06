@@ -1,4 +1,3 @@
-from turtle import width
 from config import strings
 from dash import dcc,html
 import dash_bootstrap_components as dbc

@@ -1,1 +1,1 @@
-web: gunicorn -b :9000 main:server
+web: gunicorn main:server
