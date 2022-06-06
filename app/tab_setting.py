@@ -20,30 +20,33 @@ def tab_higher_adhesion(
                                 html.Div([
                                     html.Label('周邊社區居民',className='text-secondary'),
                                     html.H6('開放資料分析 權重'),
-                                    dcc.Input(
-                                        id='surrounding-opendata-weighted',
-                                        value=score_weighted[0],
-                                        type='number',
-                                        min=0.0,
-                                        max=1.0,
-                                        step=0.01,
-                                        debounce=True
+                                    html.Form(
+                                        
                                     )
+                                    # dcc.Input(
+                                    #     id='surrounding-opendata-weighted',
+                                    #     value=score_weighted[0],
+                                    #     type='number',
+                                    #     min=0.0,
+                                    #     max=1.0,
+                                    #     step=0.01,
+                                    #     debounce=True
+                                    # )
                                 ],className='border border-secondary rounded p-2 m-1')
                             ],width=6),
                             dbc.Col([
                                 html.Div([
                                     html.Label('周邊社區居民',className='text-secondary'),
                                     html.H6('民眾參與分析 權重'),
-                                    dcc.Input(
-                                        id='surrounding-people-weighted',
-                                        value=score_weighted[1],
-                                        type='number',
-                                        min=0.0,
-                                        max=1.0,
-                                        step=0.01,
-                                        debounce=True
-                                    )  
+                                    # dcc.Input(
+                                    #     id='surrounding-people-weighted',
+                                    #     value=score_weighted[1],
+                                    #     type='number',
+                                    #     min=0.0,
+                                    #     max=1.0,
+                                    #     step=0.01,
+                                    #     debounce=True
+                                    # )  
                                 ],className='border border-secondary rounded p-2 my-1 ')
                             ],width=6),
                         ]),
@@ -52,15 +55,15 @@ def tab_higher_adhesion(
                         html.Div([
                             html.Label('社宅居民',className='text-secondary'),
                             html.H6('民眾參與分析 權重'),
-                            dcc.Input(
-                                id='social-housing-people-weighted',
-                                value=score_weighted[2],
-                                type='number',
-                                min=0.0,
-                                max=1.0,
-                                step=0.01,
-                                debounce=True
-                            )
+                            # dcc.Input(
+                            #     id='social-housing-people-weighted',
+                            #     value=score_weighted[2],
+                            #     type='number',
+                            #     min=0.0,
+                            #     max=1.0,
+                            #     step=0.01,
+                            #     debounce=True
+                            # )
                         ],className='border border-secondary rounded p-2 m-1')
                     ],width=4,)
                 ]),

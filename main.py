@@ -1,7 +1,6 @@
 from dash import Dash,dcc,html
 import pandas as pd
 import dash_bootstrap_components as dbc
-from pygments import highlight
 from app import helpers
 from app.ui import (
     header,
@@ -18,6 +17,7 @@ from sqlalchemy import create_engine
 import geopandas as gpd
 import plotly.express as px
 import numpy as np
+
 
 # EXTERNAL SCRIPTS AND STYLES
 external_scripts = ["https://kit.fontawesome.com/0bb0d79500.js"]
@@ -67,6 +67,7 @@ app.config["suppress_callback_exceptions"] = True
 vill=helpers.get_data('高雄市村里界',engine=engine)    
 # SET CURRENT PUBLIC TYPE
 curr_public = strings.PUB_SELECTOR_INIT
+curr_buffer=500
 
 
 # GENERAL LAYOUT
@@ -137,6 +138,8 @@ def render_tab(tab):
                     tab_map_controls.make_tab_port_map_controls(
                         public_arr=dpd_options_public,
                         public_val=curr_public,
+                        buffer_val=curr_buffer,
+                        attribute='map'
                     )
                 ],
             )
@@ -151,7 +154,8 @@ def render_tab(tab):
                         # public_arr=["全部公共設施"]+dpd_options_public,
                         public_arr=["全部"]+form_public_list,
                         # public_val='幼兒園'
-                        public_val='全部'
+                        public_val='全部',
+                        buffer_val=curr_buffer,
                     ),
                     html.Div(
                         id='tab-form-container'
@@ -182,13 +186,14 @@ def render_tab(tab):
     Output("tab-port-map-container", "children"),
     [
         Input("port-map-dropdown-port", "value"),
-        Input("social-housing-select-dpd",'value')
+        Input("social-housing-select-dpd",'value'),
+        Input("buffer-boundary",'value')
         # Input("port-map-dropdown-vessel-type", "value"),
         # Input("port-map-dropdown-year", "value"),
         # Input("port-map-dropdown-month", "value"),
     ],
 )
-def update_port_map_tab(public,social_housing)->html.Div:
+def update_port_map_tab(public,social_housing,buffer)->html.Div:
     """
     Renders content for the Map tab.
 
@@ -198,11 +203,12 @@ def update_port_map_tab(public,social_housing)->html.Div:
     :param month: int, month of interest
     :return: HTML div
     """
-    global curr_public
+    global curr_public,curr_buffer
     # global curr_vessel
     # global curr_year
     # global curr_month
     curr_public = public
+    curr_buffer = buffer
     # curr_vessel = vessel_type
     # curr_year = year
     # curr_month = month
@@ -216,7 +222,7 @@ def update_port_map_tab(public,social_housing)->html.Div:
     
     # GET AFTER BUFFER VILLCODE LIST
     global villcode_list, popu_filter
-    villcode_list,buffer_boundary=helpers.caculate_bufferr_village_code(social_housing_data,vill)
+    villcode_list,buffer_boundary=helpers.caculate_bufferr_village_code(social_housing_data,vill,buffer_m=curr_buffer)
 
     # GET DATA BY FILTERING VILLCODE
     data = data[data['VILLCODE'].isin(villcode_list)]        
@@ -263,6 +269,8 @@ def update_port_map_tab(public,social_housing)->html.Div:
                             tab_map_controls.make_tab_port_map_controls(
                                 public_arr=dpd_options_public,
                                 public_val=public,
+                                buffer_val=curr_buffer,
+                                attribute='map'
                             ),
                             tab_public_sip_cards.make_tab_public_sip_cards(
                                 data=data,
@@ -416,7 +424,7 @@ def public_setting(social_housing,h_surr_open,h_surr_peo,h_soci_peo):
                         ]),
                         dbc.Row([
                             dbc.Col([
-                                html.Img(),
+                                html.Img(src=app.get_asset_url('higher_.png'),width='100%'),
                             ],width=6,className='p-2'),
                             dbc.Col([
                                 dcc.Graph(figure=fig),

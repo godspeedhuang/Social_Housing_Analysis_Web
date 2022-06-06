@@ -58,6 +58,7 @@ def make_tab_public_sip_cards(
     # data_card_3 = tab_stats.get_stats_card3_data(
     #     df=df, port=port, vessel_type=vessel_type, year=year, month=month
     # )
+    vill_num=popu_filter['id'].count()
     analysis_list=['幼兒園','長期照顧服務','托育服務','身心障礙服務']
     if public in analysis_list:
         if public == '幼兒園':
@@ -134,8 +135,8 @@ def make_tab_public_sip_cards(
                             info_1=f"{demand:,.0f} 人",
                             heading_2='備註：',
                             info_2=note_2,
-                            heading_3=' ',
-                            info_3=' ',
+                            heading_3='村里數：',
+                            info_3=vill_num,
                         )
                     )
                 ],class_name='rounded')]
