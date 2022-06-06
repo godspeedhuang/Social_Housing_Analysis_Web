@@ -52,7 +52,7 @@ engine=create_engine('postgresql://postgres:5733@localhost:5432/testing')
 app = Dash(
     __name__,
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}], # USE TO DISPLAY ON MOBILEPHOBE
-    # url_base_pathname='/dash/',
+    url_base_pathname='/',
     # server=flask_app,
     external_scripts=external_scripts,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
