@@ -44,7 +44,7 @@ higher_adhesion=['幼兒園','社會福利服務','身心障礙服務','長期�
 lower_adhesion=['文康休閒活動','社區活動','青年創業空間','圖書空間','會議空間']
 form_public_list=higher_adhesion+lower_adhesion
 # CONNECT TO DATABASE
-pyproj.datadir.set_data_dir('C:\\Users\\godsp\\anaconda3\\envs\\geo_env\\Library\\share\\proj')
+# pyproj.datadir.set_data_dir('C:\\Users\\godsp\\anaconda3\\envs\\geo_env\\Library\\share\\proj')
 engine=create_engine('postgresql://postgres:5733@localhost:5432/testing')
 
 
@@ -58,6 +58,7 @@ app = Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP],
 )
 server = app.server
+app.server.config['SQLALCHEMY_DATABASE_URI']="postgres://nilllgiepdvmhh:d7036c5ea6961494ac83d30f61be4960c468d61fbf2c786da2cbab3116ef5617@ec2-34-231-221-151.compute-1.amazonaws.com:5432/d29ap8eg4krfpn"
 app.title = strings.APP_NAME
 app.config["suppress_callback_exceptions"] = True
 
