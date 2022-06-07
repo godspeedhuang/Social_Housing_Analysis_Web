@@ -12,6 +12,15 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objects as go
 
+connect_to_google={"type": "service_account","project_id": "abiding-cedar-352118",  "private_key_id": "e0a2dead48a2c5ba76934b3cc84e78838affd8bb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQDBdVg/VDpznnO1\nek4Smtll8LZkMsY+HJ21dD1lOWfaTpgf7EpKKyessoK7CoAoe6+M+k6JHz2hovup\nJmNpzDT0Qf++dfBkU0Hx1lEeSpV891pFUx3jLL0KvJa/RyR2Ud2RD1MHtLN3liKm\nMcLLIGPSfGo6X1jrgl/Ngy4V9nf7Zva+zPHbYzYGkmvWJUErSB8BmQQvia9S3FeJ\nud+x5O4o4PbSyvesjbnBYeD9MppHoR0P6R46/hlUd0Ay4Z1GC1ZV+M65ybDMoqHZ\n4hmlj1c46CAMtSgBGPvGqqEZflvwW+dGlVwmaIQBrhF8SU9Kz6I26MRr1lDodf7l\nzXPk0zIVAgMBAAECgf9+g2X1AuPyQu1gHoEGcFx24Mi0qnHBDIiZ1KU/swIlWN6b\ncE56Q0Nv669rc/HPzDuoG/Kxbhetlcayiqc0Gm8HmQF4SWr1p+zaJWhbJodR7so1\n5rrMDEp8cNsEWpsoY3YhqNt5r022olglPMHUHQ2EPiF3ndv+NdodELTfACnbYfHk\nmvs0JO0LHI9gwX/Nq4EUDgVC3/54cFOqkIMBswGArNUUJ+RAm7xmasrpGwWyU9+t\nhFuRTHDwQ209cwZDBCF/NhhGFzw7ShokMJSr7Z99HsXICOBey+B46hw6yFykCztK\nTluwboJ5WGbYEqFdnyCdT7HQLbHqKA5q2YsylaUCgYEA+ppqd4ya62x6yg5tiPxG\nSUCl1Q8Mf/cSXxIUWlTL+Q77e3THLM+7m7WKdAD6H2i/vr0p0uziuhmpy2e5BHdY\nEN3Ux1chWLIrOPrAQYz2dgZt5MgL9yuTFVrYde/uFHsF8CL4xUdrRNUHVVwsnKbZ\nq4FZe6T2+PCtoQof07e5b58CgYEAxZ/jM12UurofI+kEexc33sUxOdUPqp+FL39d\n0or5hSQLLEMge1mpjPMiCJBrAJNEeYv9RAxUD9Qb5yBemQgtT4feqf5HQ4xD7aX5\nbOSSdoxUGLu5/cUrYOz61OjX+qnVeJzaRGOEjyJgxupzqu8uCci3qehhq7gA6eUJ\n02Rt8csCgYB6014lVAPGKXgROnsTLdphIs9kmqicu4MEl77j+zWxz1cQzk6ktvgT\nvCms66Gr7VI1cU9jcvk5D0T6Tc8P0lKWibM1NI5Cg6jNl5DNUAKoHESWYjoDHhdL\n2yfGvh7paNajOPDG+Fcp+GNMwg2XheuftJkgEd1+a7AeAvFQenbnrwKBgBcZNQkP\n6w5YKsObvLZWZGVZTwOfb5FVy89dZ63wKHHzYIrv3aANPtAGqvetSZRrohlCz3tg\npYKkHA7LrcLdPc6J5vCfk9zFTDs+pwSfQq8wf7PUXUzX+tX9XOP9wyC9MQJD8w8D\nQr8oGX+mb5aPFiZ2m2D0lFXpz9GGv7tBhcg5AoGAM4EG2Zm/ONfjJEIbqlw66rW2\n3MJ/R1nbEw5y246re1Rv9KMBeruaZuCC8YMhfHGw5KhJMDTKpJcNPeIWZy/LUA33\njie00LIEO0DNlOE4mWMFH/wlgDh+Wycsrdlv78yB+w/lHtDr6oRKqNxafynsF3zp\nyb1qWgx3lZ4EnBMSEoU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dashboard@abiding-cedar-352118.iam.gserviceaccount.com",
+  "client_id": "104136748761341213233",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dashboard%40abiding-cedar-352118.iam.gserviceaccount.com"
+}
 
 public_to_form_name={
         '幼兒園':'詢問貴戶針對 幼兒園 的需求程度比重',
@@ -33,8 +42,7 @@ def get_google_sheet(
     """
     Get google sheet data.
     """
-    file=open(r'data\abiding-cedar-352118-e0a2dead48a2.json',mode='r')
-    service_account_info=json.load(file)
+    service_account_info=json.loads(connect_to_google)
     creds=service_account.Credentials.from_service_account_info(service_account_info)
 
     service=discovery.build('sheets','v4',credentials=creds)
