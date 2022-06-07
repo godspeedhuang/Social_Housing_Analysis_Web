@@ -133,7 +133,7 @@ def make_tab_port_map_map(
     ).add_to(public_map)
 
 
-    my_icon= folium.CustomIcon(r'assets\img\icon_1.png',icon_size=(30,30),icon_anchor=(15.30))
+    # my_icon= folium.CustomIcon(r'assets\img\icon_1.png',icon_size=(30,30),icon_anchor=(15.30))
     # ADD PUBLIC MARKER
     for row in data.itertuples(index=False):
         folium.Marker(
