@@ -42,8 +42,8 @@ def get_google_sheet(
     """
     Get google sheet data.
     """
-    service_account_info=json.loads(connect_to_google)
-    creds=service_account.Credentials.from_service_account_info(service_account_info)
+    # service_account_info=json.loads(connect_to_google)
+    creds=service_account.Credentials.from_service_account_info(connect_to_google)
 
     service=discovery.build('sheets','v4',credentials=creds)
 
