@@ -2,6 +2,7 @@ import pandas as pd
 from branca.element import Template, MacroElement
 from config import constants, strings, styles
 import geopandas as gpd
+from pyproj import CRS
 
 def get_data(data_name:str,engine)->gpd.GeoDataFrame:
     """
@@ -12,7 +13,11 @@ def get_data(data_name:str,engine)->gpd.GeoDataFrame:
     """
     sql=f'select * from public.{data_name}'
     data_file=gpd.GeoDataFrame.from_postgis(sql,engine,geom_col='geom')
+    # data_file.crs = CRS.from_epsg(4326).to_wkt()
+    # print(data_file)
     data_file.crs=4326
+    # data_file.set_crs(epsg=4326,inplace=True)
+    # data_file = data_file.set_crs("epsg:4326")
     return data_file
 
 def get_nongeo_data(data_name:str,engine)->pd.DataFrame:
